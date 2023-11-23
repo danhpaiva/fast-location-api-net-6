@@ -33,29 +33,29 @@ namespace FastLocationAPI.Controllers
             var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
             if (produto is null)
             {
-                return NotFound("Produto não encontrado...");
+                return NotFound($"Produto com o id {id} não encontrado...");
             }
             return produto;
         }
 
-        [HttpGet("{nfcId}", Name = "ObterProdutoPorNfcId")]
+        [HttpGet("buscar-nfc/{nfcId}", Name = "ObterProdutoPorNfcId")]
         public ActionResult<Produto> GetProdutoPorPorNfcId(string nfcId)
         {
             var produto = _context.Produtos.FirstOrDefault(p => p.NfcId == nfcId);
             if (produto is null)
             {
-                return NotFound("Produto não encontrado...");
+                return NotFound($"Produto com a nfcId {nfcId} não encontrado...");
             }
             return produto;
         }
 
-        [HttpGet("{codigo}", Name = "ObterProdutoPorCodigo")]
+        [HttpGet("buscar-codigo/{codigo}", Name = "ObterProdutoPorCodigo")]
         public ActionResult<Produto> GetProdutoPorCodigo(string codigo)
         {
             var produto = _context.Produtos.FirstOrDefault(p => p.Codigo == codigo);
             if (produto is null)
             {
-                return NotFound("Produto não encontrado...");
+                return NotFound($"Produto com o código {codigo} não encontrado...");
             }
             return produto;
         }
@@ -95,7 +95,7 @@ namespace FastLocationAPI.Controllers
 
             if (produto is null)
             {
-                return NotFound("Produto não localizado...");
+                return NotFound($"Produto com o id {id} não localizado...");
             }
             _context.Produtos.Remove(produto);
             _context.SaveChanges();
