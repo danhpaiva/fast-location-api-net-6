@@ -102,5 +102,38 @@ namespace FastLocationAPI.Controllers
 
             return Ok(produto);
         }
+
+
+        [HttpDelete("deletar-nfc/{nfcId}")]
+        public ActionResult DeleteByNfc(string nfcId)
+        {
+            var produto = _context.Produtos.FirstOrDefault(p => p.NfcId == nfcId);
+            //var produto = _context.Produtos.Find(id);
+
+            if (produto is null)
+            {
+                return NotFound($"Produto com o NFC {nfcId} não localizado...");
+            }
+            _context.Produtos.Remove(produto);
+            _context.SaveChanges();
+
+            return Ok(produto);
+        }
+
+        [HttpDelete("deletar-codigo/{codigo}")]
+        public ActionResult DeleteByCode(string codigo)
+        {
+            var produto = _context.Produtos.FirstOrDefault(p => p.Codigo == codigo);
+            //var produto = _context.Produtos.Find(id);
+
+            if (produto is null)
+            {
+                return NotFound($"Produto com o NFC {codigo} não localizado...");
+            }
+            _context.Produtos.Remove(produto);
+            _context.SaveChanges();
+
+            return Ok(produto);
+        }
     }
 }
