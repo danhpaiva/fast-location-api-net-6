@@ -38,28 +38,6 @@ namespace FastLocationAPI.Controllers
             return produto;
         }
 
-        [HttpGet("buscar-nfc/{nfcId}", Name = "ObterProdutoPorNfcId")]
-        public ActionResult<Produto> GetProdutoPorPorNfcId(string nfcId)
-        {
-            var produto = _context.Produtos.FirstOrDefault(p => p.NfcId == nfcId);
-            if (produto is null)
-            {
-                return NotFound($"Produto com a nfcId {nfcId} não encontrado...");
-            }
-            return produto;
-        }
-
-        [HttpGet("buscar-codigo/{codigo}", Name = "ObterProdutoPorCodigo")]
-        public ActionResult<Produto> GetProdutoPorCodigo(string codigo)
-        {
-            var produto = _context.Produtos.FirstOrDefault(p => p.Codigo == codigo);
-            if (produto is null)
-            {
-                return NotFound($"Produto com o código {codigo} não encontrado...");
-            }
-            return produto;
-        }
-
         [HttpPost]
         public ActionResult Post(Produto produto)
         {
@@ -103,8 +81,46 @@ namespace FastLocationAPI.Controllers
             return Ok(produto);
         }
 
+        [HttpGet("nfc/{nfcId}", Name = "ObterProdutoPorNfcId")]
+        public ActionResult<Produto> GetProdutoPorPorNfcId(string nfcId)
+        {
+            var produto = _context.Produtos.FirstOrDefault(p => p.NfcId == nfcId);
+            if (produto is null)
+            {
+                return NotFound($"Produto com a nfcId '{nfcId}' não encontrado...");
+            }
+            return produto;
+        }
 
-        [HttpDelete("deletar-nfc/{nfcId}")]
+        [HttpPost("nfc/{nfcId}", Name = "CriarProdutoPorNfcId")]
+        public ActionResult PostNfc(Produto produto)
+        {
+            if (produto is null)
+                return BadRequest();
+
+            _context.Produtos.Add(produto);
+            _context.SaveChanges();
+
+            return new CreatedAtRouteResult("CriarProduto",
+                new { nfcId = produto.NfcId }, produto);
+        }
+
+        [HttpPut("nfc/{nfcId}", Name = "AtualizarProdutoPorNfcId")]
+        public ActionResult PutNfc(string nfcId, Produto produto)
+        {
+            if (nfcId != produto.NfcId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(produto).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return Ok(produto);
+        }
+
+
+        [HttpDelete("nfc/{nfcId}")]
         public ActionResult DeleteByNfc(string nfcId)
         {
             var produto = _context.Produtos.FirstOrDefault(p => p.NfcId == nfcId);
@@ -112,7 +128,7 @@ namespace FastLocationAPI.Controllers
 
             if (produto is null)
             {
-                return NotFound($"Produto com o NFC {nfcId} não localizado...");
+                return NotFound($"Produto com o NFC '{nfcId}' não localizado...");
             }
             _context.Produtos.Remove(produto);
             _context.SaveChanges();
@@ -120,7 +136,18 @@ namespace FastLocationAPI.Controllers
             return Ok(produto);
         }
 
-        [HttpDelete("deletar-codigo/{codigo}")]
+        [HttpGet("codigo/{codigo}", Name = "ObterProdutoPorCodigo")]
+        public ActionResult<Produto> GetProdutoPorCodigo(string codigo)
+        {
+            var produto = _context.Produtos.FirstOrDefault(p => p.Codigo == codigo);
+            if (produto is null)
+            {
+                return NotFound($"Produto com o código {codigo} não encontrado...");
+            }
+            return produto;
+        }
+
+        [HttpDelete("codigo/{codigo}")]
         public ActionResult DeleteByCode(string codigo)
         {
             var produto = _context.Produtos.FirstOrDefault(p => p.Codigo == codigo);
